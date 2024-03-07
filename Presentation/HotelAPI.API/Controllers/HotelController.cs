@@ -1,4 +1,4 @@
-﻿using IResult = HotelAPI.Application.Utilities.Results.IResult;
+﻿
 namespace HotelAPI.API.Controllers;
 
 [Route("api/[controller]")]
@@ -7,68 +7,62 @@ namespace HotelAPI.API.Controllers;
 
 public class HotelController : ControllerBase
 {
-    private readonly IHotelService _hotelService;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public HotelController(IHotelService HotelService, IMapper mapper)
+    public HotelController(IMediator mediator)
     {
-        _hotelService = HotelService;
-        _mapper = mapper;
+        _mediator = mediator;
     }
+
     [HttpGet("GetHotels")]
-    public async Task<IActionResult> GetHotels()
+    public async Task<IActionResult> GetHotels([FromQuery] GetAllHotelsQueryRequest request)
     {
-        IDataResult<List<HotelGetDto>> result = await _hotelService.GetAllAsync(true,Includes.HotelIncludes);
-        return Ok(result);
+        GetAllHotelsQueryResponse response = await _mediator.Send(request);
+        return Ok(response);
 
     }
-    [HttpGet("GetHotelById/{id}")]
-    public async Task<IActionResult> GetHotelById(int id)
+    [HttpGet("GetAllHotelsDetails")]
+    public async Task<IActionResult> GetAllHotelsDetails([FromQuery] GetAllDetailsOfHotelsQueryRequest request)
     {
-        IDataResult<HotelGetDto> result = await _hotelService.GetByIdAsync(id, Includes.HotelIncludes);
-        return Ok(result);
+        GetAllDetailsOfHotelsQueryResponse response = await _mediator.Send(request);
+        return Ok(response);
+
+    }
+
+    [HttpGet("GetHotelById")]
+    public async Task<IActionResult> GetHotelById([FromQuery] GetHotelByIdQueryRequest request)
+    {
+        GetHotelByIdQueryResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
 
     [HttpPost("AddHotel")]
-    public async Task<IActionResult> AddHotel(HotelPostDto dto)
+    public async Task<IActionResult> AddHotel(CreateHotelCommandRequest request)
     {
-        IResult result = await _hotelService.CreateAsync(dto);
-        return Ok(result);
+        CreateHotelCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
 
     [HttpPost("Update")]
-    public async Task<IActionResult> Update(HotelUpdateDto dto)
+    public async Task<IActionResult> Update(UpdateHotelCommandRequest request)
     {
-        await _hotelService.UpdateAsync(dto);
-        return Ok();
+        UpdateHotelCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
-    [HttpPost("Delete")]
-    public async Task<IActionResult> SoftDelete(int id)
+  
+    [HttpDelete("SoftDelete")]
+    public async Task<IActionResult> SoftDelete(DeleteHotelCommandRequest request)
     {
-        HotelGetDto result = (await _hotelService.GetByIdAsync(id)).Data;
-        if (result == null) { return BadRequest(); }
-        await _hotelService.SoftDeleteByIdAsync(id);
-        return Ok();
-    }
+        var response = await _mediator.Send(request);
+        if (response.Success)
+        {
+            return Ok(new { isSuccess = true });
 
-    [HttpPost("Recover")]
-
-    public async Task<IActionResult> Recover(int id)
-    {
-        HotelGetDto result = (await _hotelService.GetByIdAsync(id)).Data;
-        if (result == null) { return BadRequest(); }
-        await _hotelService.RecoverByIdAsync(id);
-        return Ok();
-    }
-
-
-    [HttpPost("HardDelete")]
-    public async Task<IActionResult> HardDelete(int id)
-    {
-        HotelGetDto result = (await _hotelService.GetByIdAsync(id)).Data;
-        if (result == null) { return BadRequest(); }
-        await _hotelService.HardDeleteByIdAsync(id);
-        return Ok();
+        }
+        else
+        {
+            return BadRequest(new { isSuccess = false, errorMessage = response.ErrorMessage });
+        }
     }
 
 }

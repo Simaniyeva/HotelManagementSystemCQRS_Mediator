@@ -1,0 +1,3 @@
+﻿namespace HotelAPI.Application.Features.Queries.RoomTypeQueries.GetAllDetailsOfRoomTypes;
+
+public record GetAllDetailsOfRoomTypesQueryRequest(bool isDeleted):IRequest<GetAllDetailsOfRoomTypesQueryResponse>;

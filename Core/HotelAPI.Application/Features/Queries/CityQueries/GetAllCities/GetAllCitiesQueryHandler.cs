@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace HotelAPI.Application.Features.Queries.CityQueries.GetAllCities;
+﻿namespace HotelAPI.Application.Features.Queries.CityQueries.GetAllCities;
 
 public class GetAllCitiesQueryHandler : IRequestHandler<GetAllCitiesQueryRequest, GetAllCitiesQueryResponse>
 {

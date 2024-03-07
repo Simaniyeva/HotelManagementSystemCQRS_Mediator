@@ -1,18 +1,4 @@
-﻿
-using HotelAPI.Application.Features.Commands.CityCommands.CreateCity;
-using HotelAPI.Application.Features.Commands.CityCommands.DeleteCity;
-using HotelAPI.Application.Features.Commands.CityCommands.UpdateCity;
-using HotelAPI.Application.Features.Commands.CountryCommands.DeleteCountry;
-using HotelAPI.Application.Features.Commands.EquipmentCommands.CreateEquipment;
-using HotelAPI.Application.Features.Commands.EquipmentCommands.DeleteEquipment;
-using HotelAPI.Application.Features.Commands.EquipmentCommands.UpdateEquipment;
-using HotelAPI.Application.Features.Queries.CityQueries.GetAllCities;
-using HotelAPI.Application.Features.Queries.CityQueries.GetCityById;
-using HotelAPI.Application.Features.Queries.EquipmentQueries.GetAllEquipments;
-using HotelAPI.Application.Features.Queries.EquipmentQueries.GetEquipmentById;
-using MediatR;
-using IResult = HotelAPI.Application.Utilities.Results.IResult;
-namespace HotelAPI.API.Controllers;
+﻿namespace HotelAPI.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -30,37 +16,37 @@ public class EquipmentController : ControllerBase
         _mediator = mediator;
     }
     [HttpGet("GetEquipments")]
-    public async Task<IActionResult> GetEquipments([FromQuery] GetAllEquipmentsQueryRequest getAllEquipmentsQueryRequest)
+    public async Task<IActionResult> GetEquipments([FromQuery] GetAllEquipmentsQueryRequest request)
     {
-        GetAllEquipmentsQueryResponse response = await _mediator.Send(getAllEquipmentsQueryRequest);
+        GetAllEquipmentsQueryResponse response = await _mediator.Send(request);
 
         return Ok(response);
 
     }
     [HttpGet("GetEquipmentById/{id}")]
-    public async Task<IActionResult> GetEquipmentById([FromQuery] GetEquipmentByIdQueryRequest getEquipmentByIdQueryRequest)
+    public async Task<IActionResult> GetEquipmentById([FromQuery] GetEquipmentByIdQueryRequest request)
     {
-        GetEquipmentByIdQueryResponse response = await _mediator.Send(getEquipmentByIdQueryRequest);
+        GetEquipmentByIdQueryResponse response = await _mediator.Send(request);
         return Ok(response);
     }
 
     [HttpPost("AddEquipment")]
-    public async Task<IActionResult> AddEquipment(CreateEquipmentCommandRequest equipmentCommandRequest)
+    public async Task<IActionResult> AddEquipment(CreateEquipmentCommandRequest request)
     {
-        CreateEquipmentCommandResponse response = await _mediator.Send(equipmentCommandRequest);
+        CreateEquipmentCommandResponse response = await _mediator.Send(request);
         return Ok(response);
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(UpdateEquipmentCommandRequest updateEquipmentCommandRequest)
+    public async Task<IActionResult> Update(UpdateEquipmentCommandRequest request)
     {
-        UpdateEquipmentCommandResponse response = await _mediator.Send(updateEquipmentCommandRequest);
+        UpdateEquipmentCommandResponse response = await _mediator.Send(request);
         return Ok(response);
     }
     [HttpDelete("SoftDelete")]
-    public async Task<IActionResult> SoftDelete(DeleteEquipmentCommandRequest deleteEquipmentCommandRequest)
+    public async Task<IActionResult> SoftDelete(DeleteEquipmentCommandRequest request)
     {
-        DeleteEquipmentCommandResponse response = await _mediator.Send(deleteEquipmentCommandRequest);
+        DeleteEquipmentCommandResponse response = await _mediator.Send(request);
         if (response.Success)
         {
             return Ok(new { isSuccess = true });

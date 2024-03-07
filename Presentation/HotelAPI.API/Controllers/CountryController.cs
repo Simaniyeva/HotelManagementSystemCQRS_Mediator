@@ -1,11 +1,4 @@
-﻿using HotelAPI.Application.Features.Commands.CityCommands.DeleteCity;
-using HotelAPI.Application.Features.Commands.CountryCommands.DeleteCountry;
-using HotelAPI.Application.Features.Queries.CountryQueries.GetAllCountry;
-using HotelAPI.Application.Features.Queries.CountryQueries.GetAllDetailsOfCountry;
-using HotelAPI.Application.Features.Queries.CountryQueries.GetCountryById;
-using MediatR;
-using IResult = HotelAPI.Application.Utilities.Results.IResult;
-namespace HotelAPI.API.Controllers;
+﻿namespace HotelAPI.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -22,45 +15,45 @@ public class CountryController : ControllerBase
     }
 
     [HttpGet("GetAllCountries")]
-    public async Task<IActionResult> GetAllCountries([FromQuery] GetAllCountryQueryRequest getAllCountryQueryRequest)
+    public async Task<IActionResult> GetAllCountries([FromQuery] GetAllCountryQueryRequest request)
     {
-        GetAllCountryQueryResponse response = await _mediator.Send(getAllCountryQueryRequest);
+        GetAllCountryQueryResponse response = await _mediator.Send(request);
         return Ok(response);
 
     }
     [HttpGet("GetAllDetailsOfCountries")]
-    public async Task<IActionResult> GetAllDetailsOfCountries([FromQuery] GetAllDetailsOfCountriesQueryRequest getAllDetailsOfCountriesQueryRequest)
+    public async Task<IActionResult> GetAllDetailsOfCountries([FromQuery] GetAllDetailsOfCountriesQueryRequest request)
     {
-        GetAllDetailsOfCountriesQueryResponse response = await _mediator.Send(getAllDetailsOfCountriesQueryRequest);
+        GetAllDetailsOfCountriesQueryResponse response = await _mediator.Send(request);
         return Ok(response);
 
     }
 
     [HttpGet("GetCountryById/{id}")]
-    public async Task<IActionResult> GetCountryById([FromQuery] GetCountryByIdQueryRequest getCountryByIdQueryRequest)
+    public async Task<IActionResult> GetCountryById([FromQuery] GetCountryByIdQueryRequest request)
     {
-        GetCountryByIdQueryResponse response = await _mediator.Send(getCountryByIdQueryRequest);
+        GetCountryByIdQueryResponse response = await _mediator.Send(request);
         return Ok(response);
     }
 
 
     [HttpPost("AddCountry")]
-    public async Task<IActionResult> AddCountry(CountryPostDto dto)
+    public async Task<IActionResult> AddCountry(CreateCountryCommandRequest request)
     {
-        IResult result = await _countryService.CreateAsync(dto);
-        return Ok(result);
+        CreateCountryCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(CountryUpdateDto dto)
+    public async Task<IActionResult> Update(UpdateCountryCommandRequest request)
     {
-        await _countryService.UpdateAsync(dto);
-        return Ok();
+        UpdateCountryCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
     [HttpDelete("SoftDelete")]
-    public async Task<IActionResult> SoftDelete(DeleteCountryCommandRequest deleteCountryCommandRequest)
+    public async Task<IActionResult> SoftDelete(DeleteCountryCommandRequest request)
     {
-        var response = await _mediator.Send(deleteCountryCommandRequest);
+        var response = await _mediator.Send(request);
         if (response.Success)
         {
             return Ok(new { isSuccess = true });

@@ -29,4 +29,8 @@
 	  <ProjectReference Include="..\HotelAPI.Domain\HotelAPI.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\Queries\RoomEquipmentQueries\GetAllRoomEquipments\" />
+	</ItemGroup>
+
 </Project>

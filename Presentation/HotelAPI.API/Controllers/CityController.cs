@@ -1,18 +1,8 @@
-﻿using HotelAPI.Application.Features.Commands.CityCommands.CreateCity;
-using HotelAPI.Application.Features.Commands.CityCommands.DeleteCity;
-using HotelAPI.Application.Features.Commands.CityCommands.UpdateCity;
-using HotelAPI.Application.Features.Queries.CityQueries.GetAllCities;
-using HotelAPI.Application.Features.Queries.CityQueries.GetAllDetailsOfCities;
-using HotelAPI.Application.Features.Queries.CityQueries.GetCityById;
-using MediatR;
-namespace HotelAPI.API.Controllers;
+﻿namespace HotelAPI.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 //[Authorize(AuthenticationSchemes = "Bearer")]
-
-
-
 public class CityController : ControllerBase
 {
     private readonly ICityService _cityService;
@@ -25,45 +15,45 @@ public class CityController : ControllerBase
     }
 
     [HttpGet("GetAllCities")]
-    public async Task<IActionResult> GetAllCities([FromQuery] GetAllCitiesQueryRequest getAllCityQueryRequest)
+    public async Task<IActionResult> GetAllCities([FromQuery] GetAllCitiesQueryRequest request)
     {
-        GetAllCitiesQueryResponse response = await _mediator.Send(getAllCityQueryRequest);
+        GetAllCitiesQueryResponse response = await _mediator.Send(request);
         return Ok(response);
 
     }
     [HttpGet("GetAllCitiesDetails")]
-    public async Task<IActionResult> GetAllCitiesDetails([FromQuery] GetAllDetailsOfCitiesQueryRequest getAllDetailsOfCityQueryRequest)
+    public async Task<IActionResult> GetAllCitiesDetails([FromQuery] GetAllDetailsOfCitiesQueryRequest request)
     {
-        GetAllDetailsOfCitiesQueryResponse response = await _mediator.Send(getAllDetailsOfCityQueryRequest);
+        GetAllDetailsOfCitiesQueryResponse response = await _mediator.Send(request);
         return Ok(response);
 
     }
     [HttpGet("GetCityById")]
-    public async Task<IActionResult> GetCityById([FromQuery] GetCityByIdQueryRequest getCityByIdQueryRequest)
+    public async Task<IActionResult> GetCityById([FromQuery] GetCityByIdQueryRequest request)
     {
-        GetCityByIdQueryResponse response = await _mediator.Send(getCityByIdQueryRequest);
+        GetCityByIdQueryResponse response = await _mediator.Send(request);
         return Ok(response);
     }
 
     [HttpPost("AddCity")]
-    public async Task<IActionResult> AddCity(CreateCityCommandRequest createCityCommandRequest)
+    public async Task<IActionResult> AddCity(CreateCityCommandRequest request)
     {
-        CreateCityCommandResponse response = await _mediator.Send(createCityCommandRequest);
+        CreateCityCommandResponse response = await _mediator.Send(request);
         return Ok(response);
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(UpdateCityCommandRequest updateCityCommandRequest)
+    public async Task<IActionResult> Update(UpdateCityCommandRequest request)
     {
 
-        UpdateCityCommandResponse response = await _mediator.Send(updateCityCommandRequest);
+        UpdateCityCommandResponse response = await _mediator.Send(request);
         return Ok(response);
 
     }
     [HttpDelete("SoftDelete")]
-    public async Task<IActionResult> SoftDelete(DeleteCityCommandRequest deleteCityCommandRequest)
+    public async Task<IActionResult> SoftDelete(DeleteCityCommandRequest request)
     {
-        var response=await _mediator.Send(deleteCityCommandRequest);
+        var response=await _mediator.Send(request);
         if (response.Success)
         {
         return Ok(new {isSuccess=true});

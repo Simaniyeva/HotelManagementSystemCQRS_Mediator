@@ -1,5 +1,4 @@
-﻿using IResult = HotelAPI.Application.Utilities.Results.IResult;
-namespace HotelAPI.API.Controllers;
+﻿namespace HotelAPI.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -7,68 +6,62 @@ namespace HotelAPI.API.Controllers;
 
 public class RoomTypeController : ControllerBase
 {
-    private readonly IRoomTypeService _roomTypeService;
+    private readonly IMediator _mediator;
     private readonly IMapper _mapper;
 
-    public RoomTypeController(IRoomTypeService RoomTypeService, IMapper mapper)
-    {
-        _roomTypeService = RoomTypeService;
+    public RoomTypeController(IMapper mapper, IMediator mediator)
+    { 
         _mapper = mapper;
+        _mediator = mediator;
     }
-    [HttpGet("GetRoomTypes")]
-    public async Task<IActionResult> GetRoomTypes()
-    {
-        IDataResult<List<RoomTypeGetDto>> result = await _roomTypeService.GetAllAsync(true, Includes.RoomTypeIncludes);
-        return Ok(result);
 
-    }
-    [HttpGet("GetRoomTypeById/{id}")]
-    public async Task<IActionResult> GetRoomTypeById(int id)
+    [HttpGet("GetRoomTypes")]
+    public async Task<IActionResult> GetRoomTypes([FromQuery] GetAllRoomTypesQueryRequest request)
     {
-        IDataResult<RoomTypeGetDto> result = await _roomTypeService.GetByIdAsync(id, Includes.RoomTypeIncludes);
-        return Ok(result);
+        GetAllRoomTypesQueryResponse response = await _mediator.Send(request);
+        return Ok(response);
+    }
+    [HttpGet("GetRoomTypesDetails")]
+    public async Task<IActionResult> GetRoomTypesDetails([FromQuery] GetAllDetailsOfRoomTypesQueryRequest request)
+    {
+        GetAllDetailsOfRoomTypesQueryResponse response = await _mediator.Send(request);
+        return Ok(response);
+    }
+
+    [HttpGet("GetRoomTypeById")]
+    public async Task<IActionResult> GetRoomTypeById([FromQuery] GetRoomTypeByIdQueryRequest request)
+    {
+        GetRoomTypeByIdQueryResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
 
     [HttpPost("AddRoomType")]
-    public async Task<IActionResult> AddRoomType(RoomTypePostDto dto)
+    public async Task<IActionResult> AddRoomType(CreateRoomTypeCommandRequest request)
     {
-        IResult result = await _roomTypeService.CreateAsync(dto);
-        return Ok(result);
+        CreateRoomTypeCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
 
-    [HttpPost("Update")]
-    public async Task<IActionResult> Update(RoomTypeUpdateDto dto)
+    [HttpPut("Update")]
+    public async Task<IActionResult> Update(UpdateRoomTypeCommandRequest request)
     {
-        await _roomTypeService.UpdateAsync(dto);
-        return Ok();
+
+        UpdateRoomTypeCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
+
     }
-    [HttpPost("Delete")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("SoftDelete")]
+    public async Task<IActionResult> SoftDelete(DeleteRoomTypeCommandRequest request)
     {
-        RoomTypeGetDto result = (await _roomTypeService.GetByIdAsync(id)).Data;
-        if (result == null) { return BadRequest(); }
-        await _roomTypeService.SoftDeleteByIdAsync(id);
-        return Ok();
+        var response = await _mediator.Send(request);
+        if (response.Success)
+        {
+            return Ok(new { isSuccess = true });
+
+        }
+        else
+        {
+            return BadRequest(new { isSuccess = false, errorMessage = response.ErrorMessage });
+        }
     }
-
-    [HttpPost("Recover")]
-
-    public async Task<IActionResult> Recover(int id)
-    {
-        RoomTypeGetDto result = (await _roomTypeService.GetByIdAsync(id)).Data;
-        if (result == null) { return BadRequest(); }
-        await _roomTypeService.RecoverByIdAsync(id);
-        return Ok();
-    }
-
-
-    [HttpPost("HardDelete")]
-    public async Task<IActionResult> HardDelete(int id)
-    {
-        RoomTypeGetDto result = (await _roomTypeService.GetByIdAsync(id)).Data;
-        if (result == null) { return BadRequest(); }
-        await _roomTypeService.HardDeleteByIdAsync(id);
-        return Ok();
-    }
-
 }

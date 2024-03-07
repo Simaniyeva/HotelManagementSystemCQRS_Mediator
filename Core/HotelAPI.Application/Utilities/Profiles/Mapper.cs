@@ -1,6 +1,15 @@
 ﻿using HotelAPI.Application.Features.Commands.CityCommands.CreateCity;
 using HotelAPI.Application.Features.Commands.CityCommands.DeleteCity;
 using HotelAPI.Application.Features.Commands.CityCommands.UpdateCity;
+using HotelAPI.Application.Features.Commands.CountryCommands.CreateCountry;
+using HotelAPI.Application.Features.Commands.CountryCommands.DeleteCountry;
+using HotelAPI.Application.Features.Commands.CountryCommands.UpdateCountry;
+using HotelAPI.Application.Features.Commands.EquipmentCommands.CreateEquipment;
+using HotelAPI.Application.Features.Commands.EquipmentCommands.DeleteEquipment;
+using HotelAPI.Application.Features.Commands.EquipmentCommands.UpdateEquipment;
+using HotelAPI.Application.Features.Commands.RoomTypeCommands.CreateRoomType;
+using HotelAPI.Application.Features.Commands.RoomTypeCommands.DeleteRoomType;
+using HotelAPI.Application.Features.Commands.RoomTypeCommands.UpdateRoomType;
 
 namespace HotelAPI.Application.Utilities.Profiles;
 
@@ -19,10 +28,24 @@ public class Mapper : Profile
         CreateMap<City, CreateCityCommandRequest>().ReverseMap();
         CreateMap<City, UpdateCityCommandRequest>().ReverseMap();
         CreateMap<City, DeleteCityCommandRequest>().ReverseMap();
+
+
         //Country
-        //CreateMap<Country, CreateCountryCommandRequest>().ReverseMap();
-        //CreateMap<Country, UpdateCountryCommandRequest>().ReverseMap();
-        //CreateMap<Country, DeleteCountryCommandRequest>().ReverseMap();
+        CreateMap<Country, CreateCountryCommandRequest>().ReverseMap();
+        CreateMap<Country, UpdateCountryCommandRequest>().ReverseMap();
+        CreateMap<Country, DeleteCountryCommandRequest>().ReverseMap();
+
+
+        //Equipment
+        CreateMap<Equipment, CreateEquipmentCommandRequest>().ReverseMap();
+        CreateMap<Equipment, UpdateEquipmentCommandRequest>().ReverseMap();
+        CreateMap<Equipment, DeleteEquipmentCommandRequest>().ReverseMap();
+
+        //RoomType
+        CreateMap<RoomType, CreateRoomTypeCommandRequest>().ReverseMap();
+        CreateMap<RoomType, UpdateRoomTypeCommandRequest>().ReverseMap();
+        CreateMap<RoomType, DeleteRoomTypeCommandRequest>().ReverseMap();
+
 
 
         CreateMap<City, CityGetDto>()
